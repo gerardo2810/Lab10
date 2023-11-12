@@ -7,7 +7,7 @@
 <html>
 <head>
     <jsp:include page="../includes/bootstrap_header.jsp"/>
-    <title>Listar Locations</title>
+    <title>Lista de Locations en hr</title>
 </head>
 <body>
 <div class='container'>
@@ -19,51 +19,58 @@
             <li class="breadcrumb-item active">Locations</li>
         </ol>
     </nav>
-    <a class="btn btn-primary mb-3" href="<%=request.getContextPath()%>/LocationServlet?action=formCrear">Crear
+    <a class="btn btn-primary mb-3" href="<%=request.getContextPath()%>/LocationServlet?action=agregar">Crear
         Location</a>
     <table class="table">
-        <tr>
-            <th>Loc ID</th>
-            <th>Street Address</th>
-            <th>Postal Code</th>
-            <th>City</th>
-            <th>State Province</th>
-            <th>Country id</th>
-            <th></th>
-            <th></th>
-        </tr>
+        <thead>
+            <tr>
+                <th>Loc ID</th>
+                <th>Street Address</th>
+                <th>Postal Code</th>
+                <th>City</th>
+                <th>State Province</th>
+                <th>Country id</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
         <%
+            int i = 1;
             for (Location loc : locationList) {
         %>
         <tr>
-            <td><%=loc.getLocationId()%>
+            <td><%= i%>
             </td>
             <td><%=loc.getLocationId()%>
             </td>
-            <td><%=loc.getLocationId()%>
+            <td><%=loc.getStreet_address() == null ? "Without Street Address" : loc.getStreet_address()%>
             </td>
-            <td><%=loc.getLocationId()%>
+            <td><%= loc.getPostal_code() == null ? "Without Postal Code" : loc.getPostal_code()%>
             </td>
-            <td><%=loc.getLocationId()%>
+            <td><%=loc.getCity()%>
             </td>
-            <td><%=loc.getLocationId()%>
+            <td><%= loc.getState_province() == null ? "Without State province" : loc.getState_province()%>
             </td>
-            <td>
+            <td><%= loc.getCountry().getCountry_id() == null ? "No registró País" : loc.getCountry().getCountry_name() %>
+            </td>
                 <a class="btn btn-primary"
-                   href="<%=request.getContextPath()%>/DepartmentServlet?action=editar&id=<%=loc.getLocationId()%>">
+                   href="<%=request.getContextPath()%>/LocationServlet?action=editar&id=<%=loc.getLocationId()%>">
                     <i class="bi bi-pencil-square"></i>
                 </a>
             </td>
             <td>
                 <a class="btn btn-danger"
-                   href="<%=request.getContextPath()%>/DepartmentServlet?action=borrar&id=<%=loc.getLocationId()%>">
+                   href="<%=request.getContextPath()%>/LocationServlet?action=borrar&id=<%=loc.getLocationId()%>">
                     <i class="bi bi-trash3"></i>
                 </a>
             </td>
         </tr>
         <%
+                i++;
             }
         %>
+        </tbody>
     </table>
 </div>
 <jsp:include page="../includes/bootstrap_footer.jsp"/>

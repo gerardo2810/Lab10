@@ -4,8 +4,8 @@ public class Department {
 
     private int departmentId;
     private String departmentName;
-    private int managerId;
-    private int locationId;
+    private Employee managerId;
+    private Location locationId;
 
     /**
      * @return the departmentId

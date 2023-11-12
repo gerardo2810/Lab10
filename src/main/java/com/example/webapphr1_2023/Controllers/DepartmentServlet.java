@@ -1,6 +1,8 @@
 package com.example.webapphr1_2023.Controllers;
 
 import com.example.webapphr1_2023.Beans.Department;
+import com.example.webapphr1_2023.Beans.Employee;
+import com.example.webapphr1_2023.Beans.Location;
 import com.example.webapphr1_2023.Daos.DepartmentDao;
 import com.example.webapphr1_2023.Daos.EmployeeDao;
 import com.example.webapphr1_2023.Daos.JobDao;
@@ -51,7 +53,7 @@ public class DepartmentServlet extends HttpServlet {
                     Department demp = departmentDao.obtenerDepartment(departmentid);
 
                     if (demp != null) {
-                        request.setAttribute("empleado", demp);
+                        request.setAttribute("department", demp);
                         request.setAttribute("listaTrabajos",jobDao.obtenerListaTrabajos());
                         request.setAttribute("listaJefes",employeeDao.listarEmpleados());
                         request.setAttribute("listaDepartamentos",departmentDao.lista());
@@ -87,9 +89,30 @@ public class DepartmentServlet extends HttpServlet {
                 break;
         }
     }
-
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String action = request.getParameter("action") == null ? "lista" : request.getParameter("action");
+
+        DepartmentDao departmentDao = new DepartmentDao();
+
+        Department department = new Department();
+        department.setDepartmentName(request.getParameter("department_name"));
+
+        // Puedes agregar más configuraciones según los campos del formulario
+
+        switch (action) {
+            case "guardar":
+                departmentDao.guardarDepartment(department);
+                response.sendRedirect("DepartmentServlet?action=lista"); // redirige a la lista después de guardar
+                break;
+            case "actualizar":
+                department.setDepartmentId(Integer.parseInt(request.getParameter("department_id"))); // Asegúrate de tener un campo oculto en tu formulario con el ID
+
+                departmentDao.actualizarDepartment(department);
+                response.sendRedirect("DepartmentServlet?action=lista"); // redirige a la lista después de actualizar
+                break;
+            // Puedes agregar más casos según las acciones específicas que necesites manejar
+        }
     }
 }

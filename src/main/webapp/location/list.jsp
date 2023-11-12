@@ -22,7 +22,6 @@
     <a class="btn btn-primary mb-3" href="<%=request.getContextPath()%>/LocationServlet?action=agregar">Crear
         Location</a>
     <table class="table">
-        <thead>
             <tr>
                 <th>Loc ID</th>
                 <th>Street Address</th>
@@ -33,15 +32,10 @@
                 <th></th>
                 <th></th>
             </tr>
-        </thead>
-        <tbody>
         <%
-            int i = 1;
             for (Location loc : locationList) {
         %>
         <tr>
-            <td><%= i%>
-            </td>
             <td><%=loc.getLocationId()%>
             </td>
             <td><%=loc.getStreet_address() == null ? "Without Street Address" : loc.getStreet_address()%>
@@ -52,8 +46,9 @@
             </td>
             <td><%= loc.getState_province() == null ? "Without State province" : loc.getState_province()%>
             </td>
-            <td><%= loc.getCountry().getCountry_id() == null ? "No registró País" : loc.getCountry().getCountry_name() %>
+            <td><%= loc.getCountry().getCountry_id()%>
             </td>
+            <td>
                 <a class="btn btn-primary"
                    href="<%=request.getContextPath()%>/LocationServlet?action=editar&id=<%=loc.getLocationId()%>">
                     <i class="bi bi-pencil-square"></i>
@@ -67,10 +62,8 @@
             </td>
         </tr>
         <%
-                i++;
             }
         %>
-        </tbody>
     </table>
 </div>
 <jsp:include page="../includes/bootstrap_footer.jsp"/>

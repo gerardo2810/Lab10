@@ -10,18 +10,18 @@ import java.util.ArrayList;
 
 public class LocationDao extends DaoBase{
     public ArrayList<Location> listaLocation() {
-
+        ArrayList<Location> list = new ArrayList<>();
         String sql = "SELECT \n" +
                 "    l.location_id as `Loc ID`,\n" +
                 "    l.street_address as `Street Address`,\n" +
                 "    l.postal_code as `Postal Code`,\n" +
                 "    l.city as `City`,\n" +
                 "    l.state_province as `State Province`,\n" +
-                "    c.country_name as `Country id`\n" +
-                "FROM hr.locations AS l\n" +
-                "INNER JOIN hr.countries c ON (l.country_id = c.country_id)";
+                "    c.country_id as `Country id`\n" +
+                "FROM locations AS l\n" +
+                "INNER JOIN countries c ON (l.country_id = c.country_id)";
 
-        ArrayList<Location> list = new ArrayList<>();
+
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -35,7 +35,7 @@ public class LocationDao extends DaoBase{
                 location.setState_province(rs.getString(5));
 
                 Countries country = new Countries();
-                country.setCountry_id(rs.getString("l.country_id"));
+                country.setCountry_id(rs.getString(6));
                 location.setCountry(country);
                 list.add(location);
             }
@@ -100,7 +100,7 @@ public class LocationDao extends DaoBase{
                 "    l.postal_code as `Postal Code`,\n" +
                 "    l.city as `City`,\n" +
                 "    l.state_province as `State Province`,\n" +
-                "    c.country_name as `Country id`\n" +
+                "    c.country_id as `Country id`\n" +
                 "FROM hr.locations AS l\n" +
                 "INNER JOIN hr.countries c ON (l.country_id = c.country_id)\n" +
                 "where l.location_id = ?";
@@ -146,13 +146,14 @@ public class LocationDao extends DaoBase{
 
     private Location fetchLocationData(ResultSet rs) throws SQLException {
         Location location = new Location();
-        location.setState_province(rs.getString(1));
-        location.setPostal_code(rs.getString(2));
-        location.setCity(rs.getString(3));
-        location.setState_province(rs.getString(4));
+        location.setLocationId(rs.getInt(1));
+        location.setState_province(rs.getString(2));
+        location.setPostal_code(rs.getString(3));
+        location.setCity(rs.getString(4));
+        location.setState_province(rs.getString(5));
 
         Countries country = new Countries();
-        country.setCountry_id(rs.getString("l.country_id"));
+        country.setCountry_id(rs.getString(6));
         location.setCountry(country);
 
         return location;

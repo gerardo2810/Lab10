@@ -4,6 +4,7 @@ import com.example.webapphr1_2023.Beans.Employee;
 import com.example.webapphr1_2023.Daos.CountryDao;
 import com.example.webapphr1_2023.Daos.LocationDao;
 import com.example.webapphr1_2023.Beans.Location;
+import com.example.webapphr1_2023.Beans.Countries;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -30,8 +31,9 @@ public class LocationServlet extends HttpServlet {
 
         switch (action) {
             case "lista":
-                req.setAttribute("listaLocations", locationDao.listaLocation());
-                view = req.getRequestDispatcher("locations/lista.jsp");view.forward(req, resp);
+                req.setAttribute("locationList", locationDao.listaLocation());
+                view = req.getRequestDispatcher("location/list.jsp");
+                view.forward(req, resp);
                 break;
             case "agregar":
                 req.setAttribute("listaCountries",countryDao.lista());

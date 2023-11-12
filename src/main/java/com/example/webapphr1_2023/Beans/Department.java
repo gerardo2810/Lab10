@@ -5,8 +5,8 @@ public class Department {
 
     private int departmentId;
     private String departmentName;
-    private Employee managerId;
-    private Location locationId;
+    private Employee manager;
+    private Location location;
 
 
     public int getDepartmentId() {
@@ -25,21 +25,19 @@ public class Department {
         this.departmentName = departmentName;
     }
 
-    public Employee getManagerId() {
-        return managerId;
+    public Employee getManager() {
+        return manager;
     }
 
-    public void setManagerId(Employee managerId) {
-        this.managerId = managerId;
+    public void setManager(Employee manager) {
+        this.manager = manager;
     }
 
-    public Location getLocationId() {
-        return locationId;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setLocationId(Location locationId) {
-        this.locationId = locationId;
+    public void setLocation(Location location) {
+        this.location = location;
     }
-
-
 }

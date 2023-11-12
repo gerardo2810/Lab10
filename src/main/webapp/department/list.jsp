@@ -4,6 +4,8 @@
 <%@ page import="com.example.webapphr1_2023.Beans.Location" %>
 <%@ page import="com.example.webapphr1_2023.Controllers.DepartmentServlet" %>
 
+<jsp:useBean type="java.util.ArrayList<com.example.webapphr1_2023.Beans.Department>" scope="request" id="listaDepartamentos"/>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -12,8 +14,16 @@
 </head>
 <body>
 <div class='container'>
-    <h1>Lista de Departamentos</h1>
-    <table class='table table-bordered table-striped'>
+    <h1 class='mb-3'>Lista de Departamentos</h1>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<%= request.getContextPath()%>">Home</a></li>
+            <li class="breadcrumb-item active">Departments</li>
+        </ol>
+    </nav>
+    <a href="<%= request.getContextPath()%>/DepartmentServlet?action=agregar" class="btn btn-primary mb-4">
+        Agregar nuevo Departamento</a>
+    <table class="table">
         <thead>
         <tr>
             <th>#</th>
@@ -26,17 +36,17 @@
         <tbody>
         <%
             int i = 1;
-            for (Department department : (List<Department>) request.getAttribute("listaDepartamentos")) {
+            for (Department department : listaDepartamentos) {
         %>
         <tr>
             <td><%= i %></td>
             <td><%= department.getDepartmentName() %></td>
             <td>
                 <%
-                    Employee manager = department.getManagerId();
+                    Employee manager = department.getManager();
                     if (manager != null) {
                 %>
-                <%= manager.getFullName() %>
+                <%= manager.getFirstName() + " " + manager.getLastName() %>
                 <%
                 } else {
                 %>
@@ -45,10 +55,10 @@
             </td>
             <td>
                 <%
-                    Location location = department.getLocationId();
+                    Location location = department.getLocation();
                     if (location != null) {
                 %>
-                <%= location.getStreet_address() %>
+                <%= location.getCity() +" - " +location.getStreet_address() %>
                 <%
                 } else {
                 %>
@@ -56,8 +66,8 @@
                 <% } %>
             </td>
             <td>
-                <a class="btn btn-primary" href="<%= request.getContextPath()%>/DepartmentServlet?action=editar&id=<%= department.getDepartmentId() %>">Editar</a>
-                <a class="btn btn-danger" href="<%= request.getContextPath()%>/DepartmentServlet?action=borrar&id=<%= department.getDepartmentId() %>">Borrar</a>
+                <a class="btn btn-primary" href="<%= request.getContextPath()%>/DepartmentServlet?action=editar&id=<%= department.getDepartmentId() %>"><i class="bi bi-pencil-square"></i></a>
+                <a class="btn btn-danger" href="<%= request.getContextPath()%>/DepartmentServlet?action=borrar&id=<%= department.getDepartmentId() %>"><i class="bi bi-trash3"></i></a>
             </td>
         </tr>
         <% i++; %>

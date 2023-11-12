@@ -16,8 +16,10 @@ public class DepartmentDao extends DaoBase {
         String sql = "SELECT \n" +
                 "    d.department_id,\n" +
                 "    d.department_name,\n" +
-                "    concat(m.first_name,\" \", m.last_name) as 'Nombre completo',\n" +
-                "    concat(l.city,\" - \",l.street_address ) as \"Location\"\n" +
+                "    m.first_name,\n" +
+                "    m.last_name,\n" +
+                "    l.city,\n" +
+                "    l.street_address\n" +
                 "FROM departments d\n" +
                 "LEFT JOIN employees m ON d.manager_id = m.employee_id\n" +
                 "LEFT JOIN locations l ON d.location_id = l.location_id";
@@ -29,6 +31,15 @@ public class DepartmentDao extends DaoBase {
                 Department department = new Department();
                 department.setDepartmentId(rs.getInt(1));
                 department.setDepartmentName(rs.getString(2));
+                Employee manager = new Employee();
+                manager.setFirstName(rs.getString(3));
+                manager.setLastName(rs.getString(4));
+                department.setManager(manager);
+                Location location = new Location();
+                location.setCity(rs.getString(5));
+                location.setStreet_address(rs.getString(6));
+                department.setLocation(location);
+
                 list.add(department);
             }
 
@@ -137,7 +148,7 @@ public class DepartmentDao extends DaoBase {
             manager.setEmployeeId(rs.getInt("manager_id"));
             manager.setFirstName(rs.getString("first_name"));
             manager.setLastName(rs.getString("last_name"));
-            department.setManagerId(manager);
+            department.setManager(manager);
         }
 
         Location location = new Location();
@@ -145,7 +156,7 @@ public class DepartmentDao extends DaoBase {
         location.setCity(rs.getString("city"));
         location.setState_province(rs.getString("state"));
         //location.setCountry(rs.getString("country_id"));
-        department.setLocationId(location);
+        department.setLocation(location);
 
         return department;
     }
@@ -155,17 +166,17 @@ public class DepartmentDao extends DaoBase {
         pstmt.setString(1, department.getDepartmentName());
 
         // Validar que el ID del gerente sea un número entero mayor que 0
-        if (department.getManagerId() != null && department.getManagerId().getEmployeeId() <= 0) {
+        if (department.getManager() != null && department.getManager().getEmployeeId() <= 0) {
             throw new SQLException("El ID del gerente debe ser un número entero mayor que 0");
         }
 
         // Validar que el ID de la ubicación sea un número entero mayor que 0
-        if (department.getLocationId() != null && department.getLocationId().getLocationId() <= 0) {
+        if (department.getLocation() != null && department.getLocation().getLocationId() <= 0) {
             throw new SQLException("El ID de la ubicación debe ser un número entero mayor que 0");
         }
 
-        pstmt.setInt(2, department.getManagerId() != null ? department.getManagerId().getEmployeeId() : null);
-        pstmt.setInt(3, department.getLocationId() != null ? department.getLocationId().getLocationId() : null);
+        pstmt.setInt(2, department.getManager() != null ? department.getManager().getEmployeeId() : null);
+        pstmt.setInt(3, department.getLocation() != null ? department.getLocation().getLocationId() : null);
     }
 
 }

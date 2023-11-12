@@ -13,9 +13,12 @@ public class DepartmentDao extends DaoBase {
     public ArrayList<Department> lista() {
 
         ArrayList<Department> list = new ArrayList<>();
+        String sql = "select * from departments d\n" +
+                "inner join locations l on d.location_id = l.location_id\n" +
+                "left join employees m on d.manager_id = m.employee_id\n" ;
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM departments")) {
+             ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
                 Department department = new Department();
@@ -30,21 +33,37 @@ public class DepartmentDao extends DaoBase {
         }
         return list;
     }
-   /* public void crearDepartment(int department_id, String department_name, Employee manager_id, Location location_id) {
+    /*public void crearDepartment(Department department) {
 
         String sql = "INSERT INTO jobs (department_id,department_name,manager_id,location_id) VALUES (?,?,?,?)";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, jobId);
-            pstmt.setString(2, jobTitle);
-            pstmt.setInt(3, minSalary);
-            pstmt.setInt(4, maxSalary);
+            pstmt.setInt(1, department.getDepartmentId());
+            pstmt.setString(2, department.getDepartmentName());
+            pstmt.setInt(3, department.getManagerId().getEmployeeId());
+            pstmt.setInt(4, department.getLocationId().getLocationId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }*/
-   /*public void actualizarDepartment(Department department) {
+    public void guardarDepartment(Department department) {
+
+        String sql = "INSERT INTO departments (department_id, department_name, manager_id, location_id) "
+                + "VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            setDepartmentData(department, pstmt);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+   public void actualizarDepartment(Department department) {
 
        String sql = "UPDATE employees "
                + "SET department_name = ?, "
@@ -55,8 +74,7 @@ public class DepartmentDao extends DaoBase {
        try (Connection conn = getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-           setEmployeeData(department, pstmt);
-           pstmt.setInt(11, department.getEmployeeId());
+           pstmt.setInt(11, department.getDepartmentId());
 
            pstmt.executeUpdate();
 
@@ -77,29 +95,22 @@ public class DepartmentDao extends DaoBase {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-    }*/
-   /*private void setDepartmentData(Department department, PreparedStatement pstmt) throws SQLException {
-       pstmt.setString(1, department.getDepartmentName());
-       pstmt.setInt(3, department.getManagerId().getEmployeeId());
-       pstmt.setString(4, department.getLocationId().g);
+    }
+    private void setDepartmentData(Department department, PreparedStatement pstmt) throws SQLException {
+        pstmt.setString(1, department.getDepartmentName());
 
-       pstmt.setString(6, department.getE().getJobId());
-       pstmt.setBigDecimal(7, employee.getSalary());
-       if (employee.getCommissionPct() == null) {
-           pstmt.setNull(8, Types.DECIMAL);
-       } else {
-           pstmt.setBigDecimal(8, employee.getCommissionPct());
-       }
-       if (employee.getManager().getEmployeeId() == 0) {
-           pstmt.setNull(9, Types.INTEGER);
-       } else {
-           pstmt.setInt(9, employee.getManager().getEmployeeId());
-       }
+        // Validar que el ID del gerente sea un número entero mayor que 0
+        if (department.getManagerId() != null && department.getManagerId().getEmployeeId() <= 0) {
+            throw new SQLException("El ID del gerente debe ser un número entero mayor que 0");
+        }
 
-       if (employee.getDepartment().getDepartmentId() == 0) {
-           pstmt.setNull(10, Types.INTEGER);
-       } else {
-           pstmt.setInt(10, employee.getDepartment().getDepartmentId());
-       }
-   }*/
+        // Validar que el ID de la ubicación sea un número entero mayor que 0
+        if (department.getLocationId() != null && department.getLocationId().getLocationId() <= 0) {
+            throw new SQLException("El ID de la ubicación debe ser un número entero mayor que 0");
+        }
+
+        pstmt.setInt(2, department.getManagerId() != null ? department.getManagerId().getEmployeeId() : null);
+        pstmt.setInt(3, department.getLocationId() != null ? department.getLocationId().getLocationId() : null);
+    }
+
 }

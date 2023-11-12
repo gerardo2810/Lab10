@@ -13,9 +13,14 @@ public class DepartmentDao extends DaoBase {
     public ArrayList<Department> lista() {
 
         ArrayList<Department> list = new ArrayList<>();
-        String sql = "select * from departments d\n" +
-                "inner join locations l on d.location_id = l.location_id\n" +
-                "left join employees m on d.manager_id = m.employee_id\n" ;
+        String sql = "SELECT \n" +
+                "    d.department_id,\n" +
+                "    d.department_name,\n" +
+                "    concat(m.first_name,\" \", m.last_name) as 'Nombre completo',\n" +
+                "    concat(l.city,\" - \",l.street_address ) as \"Location\"\n" +
+                "FROM departments d\n" +
+                "LEFT JOIN employees m ON d.manager_id = m.employee_id\n" +
+                "LEFT JOIN locations l ON d.location_id = l.location_id";
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {

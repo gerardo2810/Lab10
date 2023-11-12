@@ -29,7 +29,7 @@ public class DepartmentServlet extends HttpServlet {
         switch (action) {
             case "lista":
                 request.setAttribute("listaDepartments", departmentDao.lista());
-                view = request.getRequestDispatcher("department/lista.jsp");
+                view = request.getRequestDispatcher("department/list.jsp");
                 view.forward(request, response);
                 break;
             case "agregar":

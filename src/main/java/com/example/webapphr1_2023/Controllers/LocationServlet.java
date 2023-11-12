@@ -37,24 +37,27 @@ public class LocationServlet extends HttpServlet {
                 break;
             case "agregar":
                 req.setAttribute("listaCountries",countryDao.lista());
-                view = req.getRequestDispatcher("locations/formularioNuevoLocation.jsp");
+                view = req.getRequestDispatcher("location/FormularioNuevo.jsp");
                 view.forward(req, resp);
                 break;
 
             case "editar":
-                if (req.getParameter("id") != null){
-                    String locationeIdString = req.getParameter("id");
+                if (req.getParameter("id") != null) {
+                    String locationIdString = req.getParameter("id");
                     int locationId = 0;
                     try {
-                        locationId = Integer.parseInt(locationeIdString);
+                        locationId = Integer.parseInt(locationIdString);
                     } catch (NumberFormatException ex) {
                         resp.sendRedirect("LocationServlet");
+                        return;
                     }
 
                     Location l = locationDao.obtenerLocation(locationId);
                     if (l != null) {
+                        req.setAttribute("location", l); // Configura el objeto location en el ámbito del request
                         req.setAttribute("listaLocations", locationDao.listaLocation());
-                        view = req.getRequestDispatcher("locations/formularioEditarLocation.jsp");
+                        req.setAttribute("listaCountries", countryDao.lista());
+                        view = req.getRequestDispatcher("location/FormularioEditar.jsp");
                         view.forward(req, resp);
                     } else {
                         resp.sendRedirect("LocationServlet");
@@ -62,10 +65,9 @@ public class LocationServlet extends HttpServlet {
 
                 } else {
                     resp.sendRedirect("LocationServlet");
-
-
                 }
                 break;
+
             case "borrar":
                 if (req.getParameter("id") != null) {
                     String locationeIdString = req.getParameter("id");
@@ -89,7 +91,38 @@ public class LocationServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String action = request.getParameter("action") == null ? "lista" : request.getParameter("action");
+
+        LocationDao locationDao = new LocationDao();
+
+        Location location = new Location();
+        location.setStreet_address(request.getParameter("street_address"));
+        location.setPostal_code(request.getParameter("postal_code"));
+        location.setCity(request.getParameter("city"));
+        location.setState_province(request.getParameter("state_province"));
+
+
+        Countries countries = new Countries();
+        countries.setCountry_id(request.getParameter("country_id"));
+        location.setCountry(countries);
+
+
+        switch (action) {
+            case "guardar":
+                locationDao.guardarLocation(location);
+
+                response.sendRedirect("EmployeeServlet");
+                break;
+            case "actualizar":
+                location.setLocationId(Integer.parseInt(request.getParameter("location_id"))); //no olvidar que para actualizar se debe enviar el ID
+
+                locationDao.actualizarLocation(location);
+
+                response.sendRedirect("LocationServlet");
+
+                break;
+        }
     }
 }

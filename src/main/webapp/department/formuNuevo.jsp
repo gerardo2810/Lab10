@@ -1,49 +1,45 @@
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="com.example.webapphr1_2023.Beans.Employee" %>
-<%@ page import="com.example.webapphr1_2023.Beans.Location" %>
-<%@ page import="com.example.webapphr1_2023.Beans.Department" %>
+<%@page import="java.util.ArrayList" %>
+<%@page import="com.example.webapphr1_2023.Beans.Location" %>
+<%@page import="com.example.webapphr1_2023.Beans.Countries" %>
+<jsp:useBean id="listaCountries" type="ArrayList<Countries>" scope="request" />
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
-<%
-    ArrayList<Employee> listaJefes = (ArrayList<Employee>) request.getAttribute("listaJefes");
-    Department department = (Department) request.getAttribute("department");
-    ArrayList<Location> listaUbicaciones = (ArrayList<Location>) request.getAttribute("listaUbicaciones");
-%>
-
 <!DOCTYPE html>
 <html>
 <head>
     <jsp:include page="../includes/bootstrap_header.jsp"/>
-    <title>Nuevo departamento</title>
+    <title>Nueva Locación</title>
 </head>
 <body>
 <div class='container'>
     <div class="row justify-content-center">
-        <form method="POST" action="DepartmentServlet?action=guardar" class="col-md-6 col-lg-6">
-            <h1 class='mb-3'>Nuevo departamento</h1>
+        <form method="POST" action="LocationServlet?action=guardar" class="col-md-6 col-lg-6">
+            <h1 class='mb-3'>Nueva Locación</h1>
             <hr>
             <div class="mb-3">
-                <label for="department_name">Nombre del departamento</label>
-                <input type="text" class="form-control form-control-sm" name="department_name" id="department_name">
+                <label for="street_address">Dirección</label>
+                <input type="text" class="form-control form-control-sm" name="street_address" id="street_address">
             </div>
             <div class="mb-3">
-                <label for="manager_id">Jefe de departamento</label>
-                <select name="manager_id" class="form-select" id="manager_id">
-                    <option value="0">-- Sin jefe --</option>
-                    <% for (Employee manager : listaJefes) { %>
-                    <option value="<%= manager.getEmployeeId() %>"><%= manager.getFullName() %></option>
+                <label for="postal_code">Código Postal</label>
+                <input type="text" class="form-control form-control-sm" name="postal_code" id="postal_code">
+            </div>
+            <div class="mb-3">
+                <label for="city">Ciudad</label>
+                <input type="text" class="form-control form-control-sm" name="city" id="city">
+            </div>
+            <div class="mb-3">
+                <label for="state_province">Provincia/Estado</label>
+                <input type="text" class="form-control form-control-sm" name="state_province" id="state_province">
+            </div>
+            <div class="mb-3">
+                <label for="country_id">País</label>
+                <select name="country_id" class="form-select" id="country_id">
+                    <% for(Countries country: listaCountries){ %>
+                    <option value="<%=country.getCountry_id()%>"> <%=country.getCountry_name()%> </option>
                     <% } %>
                 </select>
             </div>
-            <div class="mb-3">
-                <label for="location_id">Ubicación</label>
-                <select name="location_id" class="form-select" id="location_id">
-                    <option value="0">-- Sin ubicación --</option>
-                    <% for (Location location : listaUbicaciones) { %>
-                    <option value="<%= location.getLocationId() %>"><%= location.getCity() %></option>
-                    <% } %>
-                </select>
-            </div>
-            <a href="<%= request.getContextPath() %>/DepartmentServlet" class="btn btn-danger">Cancelar</a>
+            <a href="<%= request.getContextPath()%>/LocationServlet" class="btn btn-danger">Cancelar</a>
             <input type="submit" value="Guardar" class="btn btn-primary"/>
         </form>
     </div>
@@ -51,3 +47,4 @@
 <jsp:include page="../includes/bootstrap_footer.jsp"/>
 </body>
 </html>
+

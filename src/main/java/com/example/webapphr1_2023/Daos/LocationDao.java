@@ -75,7 +75,7 @@ public class LocationDao extends DaoBase{
                 + "postal_code = ?, "
                 + "city  = ?, "
                 + "state_province = ?, "
-                + "country_id  = ?, "
+                + "country_id  = ? "
                 + "WHERE location_id = ?";
 
         try (Connection conn = getConnection();

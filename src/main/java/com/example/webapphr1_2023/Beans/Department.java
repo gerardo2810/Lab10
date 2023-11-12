@@ -38,28 +38,18 @@ public class Department {
     /**
      * @return the managerId
      */
-    public int getManagerId() {
+    public Employee getManagerId(){
         return managerId;
     }
-
-    /**
-     * @param managerId the managerId to set
-     */
-    public void setManagerId(int managerId) {
-        this.managerId = managerId;
+    public  void setManagerId(Employee managerId){
+        this.managerId=managerId;
     }
 
-    /**
-     * @return the locationId
-     */
-    public int getLocationId() {
+    public Location getLocationId(){
         return locationId;
     }
 
-    /**
-     * @param locationId the locationId to set
-     */
-    public void setLocationId(int locationId) {
-        this.locationId = locationId;
+    public void setLocationId(Location locationId){
+        this.locationId=locationId;
     }
 }

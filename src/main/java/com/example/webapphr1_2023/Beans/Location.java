@@ -6,7 +6,7 @@ public class Location {
     private String postal_code;
     private String city;
     private String state_province;
-    //private Countries country_id;
+    private Countries country;
 
     public int getLocationId() {
         return locationId;
@@ -14,5 +14,45 @@ public class Location {
 
     public void setLocationId(int locationId) {
         this.locationId = locationId;
+    }
+
+    public String getStreet_address() {
+        return street_address;
+    }
+
+    public void setStreet_address(String street_address) {
+        this.street_address = street_address;
+    }
+
+    public String getPostal_code() {
+        return postal_code;
+    }
+
+    public void setPostal_code(String postal_code) {
+        this.postal_code = postal_code;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState_province() {
+        return state_province;
+    }
+
+    public void setState_province(String state_province) {
+        this.state_province = state_province;
+    }
+
+    public Countries getCountry() {
+        return country;
+    }
+
+    public void setCountry(Countries country) {
+        this.country = country;
     }
 }

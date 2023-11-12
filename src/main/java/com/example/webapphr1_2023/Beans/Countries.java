@@ -5,7 +5,6 @@ import javax.swing.plaf.synth.Region;
 public class Countries {
     private String country_id;
     private  String country_name;
-    private Regions region_id;
 
     public String getCountry_id() {
         return country_id;
@@ -21,13 +20,5 @@ public class Countries {
 
     public void setCountry_name(String country_name) {
         this.country_name = country_name;
-    }
-
-    public Regions getRegion_id() {
-        return region_id;
-    }
-
-    public void setRegion_id(Regions region_id) {
-        this.region_id = region_id;
     }
 }

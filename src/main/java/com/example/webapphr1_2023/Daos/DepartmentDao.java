@@ -4,7 +4,7 @@ package com.example.webapphr1_2023.Daos;
 import com.example.webapphr1_2023.Beans.Department;
 import com.example.webapphr1_2023.Beans.Employee;
 import com.example.webapphr1_2023.Beans.Location;
-
+import com.example.webapphr1_2023.Beans.Countries;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -32,6 +32,31 @@ public class DepartmentDao extends DaoBase {
 
         }
         return list;
+    }
+    public Department obtenerDepartment(int departmentid) {
+
+        Department department = null;
+        String sql = "select * from departments d\n" +
+                "inner join locations l on d.location_id = l.location_id\n" +
+                "left join employees m on d.manager_id = m.employee_id\n" ;
+
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, departmentid);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                if (rs.next()) {
+                    department = fetchDepartmentData(rs);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return department;
     }
     /*public void crearDepartment(Department department) {
 
@@ -96,6 +121,31 @@ public class DepartmentDao extends DaoBase {
             ex.printStackTrace();
         }
     }
+    private Department fetchDepartmentData(ResultSet rs) throws SQLException {
+        Department department = new Department();
+        department.setDepartmentId(rs.getInt(1));
+        department.setDepartmentName(rs.getString(2));
+
+        Employee manager = null;
+        if (rs.getInt("manager_id") != 0) {
+            manager = new Employee();
+            manager.setEmployeeId(rs.getInt("manager_id"));
+            manager.setFirstName(rs.getString("first_name"));
+            manager.setLastName(rs.getString("last_name"));
+            department.setManagerId(manager);
+        }
+
+        Location location = new Location();
+        location.setLocationId(rs.getInt(3));
+        location.setCity(rs.getString("city"));
+        location.setState_province(rs.getString("state"));
+        //location.setCountry(rs.getString("country_id"));
+        department.setLocationId(location);
+
+        return department;
+    }
+
+
     private void setDepartmentData(Department department, PreparedStatement pstmt) throws SQLException {
         pstmt.setString(1, department.getDepartmentName());
 

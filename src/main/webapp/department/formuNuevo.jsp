@@ -1,10 +1,13 @@
-<%@page import="java.util.ArrayList" %>
-<%@page import="com.example.webapphr1_2023.Beans.Employee" %>
-<%@page import="com.example.webapphr1_2023.Beans.Location" %>
-<%@page import="com.example.webapphr1_2023.Beans.Department" %>
-<jsp:useBean id="listaJefes" type="ArrayList<Employee>" scope="request" />
-<jsp:useBean id="listaUbicaciones" type="ArrayList<Location>" scope="request" />
-<jsp:useBean id="department" type="Department" scope="request"/>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.example.webapphr1_2023.Beans.Employee" %>
+<%@ page import="com.example.webapphr1_2023.Beans.Location" %>
+<%@ page import="com.example.webapphr1_2023.Beans.Department" %>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%
+    ArrayList<Employee> listaJefes = (ArrayList<Employee>) request.getAttribute("listaJefes");
+    Department department = (Department) request.getAttribute("department");
+    ArrayList<Location> listaUbicaciones = (ArrayList<Location>) request.getAttribute("listaUbicaciones");
+%>
 
 <!DOCTYPE html>
 <html>
@@ -26,8 +29,8 @@
                 <label for="manager_id">Jefe de departamento</label>
                 <select name="manager_id" class="form-select" id="manager_id">
                     <option value="0">-- Sin jefe --</option>
-                    <% for(Employee manager: listaJefes){ %>
-                    <option value="<%=manager.getEmployeeId()%>"> <%=manager.getFullName()%> </option>
+                    <% for (Employee manager : listaJefes) { %>
+                    <option value="<%= manager.getEmployeeId() %>"><%= manager.getFullName() %></option>
                     <% } %>
                 </select>
             </div>
@@ -35,12 +38,12 @@
                 <label for="location_id">Ubicación</label>
                 <select name="location_id" class="form-select" id="location_id">
                     <option value="0">-- Sin ubicación --</option>
-                    <% for(Location location: listaUbicaciones){ %>
-                    <option value="<%=location.getLocationId()%>"> <%=location.getCity()%>, <%=location.getStateProvince()%> </option>
+                    <% for (Location location : listaUbicaciones) { %>
+                    <option value="<%= location.getLocationId() %>"><%= location.getCity() %></option>
                     <% } %>
                 </select>
             </div>
-            <a href="<%= request.getContextPath()%>/DepartmentServlet" class="btn btn-danger">Cancelar</a>
+            <a href="<%= request.getContextPath() %>/DepartmentServlet" class="btn btn-danger">Cancelar</a>
             <input type="submit" value="Guardar" class="btn btn-primary"/>
         </form>
     </div>
@@ -48,4 +51,3 @@
 <jsp:include page="../includes/bootstrap_footer.jsp"/>
 </body>
 </html>
-

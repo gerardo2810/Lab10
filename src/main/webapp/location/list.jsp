@@ -19,8 +19,7 @@
             <li class="breadcrumb-item active">Locations</li>
         </ol>
     </nav>
-    <a class="btn btn-primary mb-3" href="<%=request.getContextPath()%>/LocationServlet?action=agregar">Crear
-        Location</a>
+    <a class="btn btn-primary mb-3" href="<%=request.getContextPath()%>/LocationServlet?action=agregar">Agregar nueva Ubicación</a>
     <table class="table">
             <tr>
                 <th>Loc ID</th>

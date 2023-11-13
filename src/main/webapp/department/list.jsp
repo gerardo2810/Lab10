@@ -74,7 +74,6 @@
         <% } %>
         </tbody>
     </table>
-    <a class="btn btn-success" href="<%= request.getContextPath()%>/DepartmentServlet?action=agregar">Nuevo Departamento</a>
 </div>
 <jsp:include page="../includes/bootstrap_footer.jsp"/>
 </body>

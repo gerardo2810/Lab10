@@ -52,10 +52,18 @@ public class DepartmentDao extends DaoBase {
     public Department obtenerDepartment(int departmentid) {
 
         Department department = null;
-        String sql = "select * from departments d\n" +
-                "inner join locations l on d.location_id = l.location_id\n" +
-                "left join employees m on d.manager_id = m.employee_id\n" ;
 
+        String sql = "SELECT \n" +
+                "    d.department_id,\n" +
+                "    d.department_name,\n" +
+                "    m.first_name,\n" +
+                "    m.last_name,\n" +
+                "    l.city,\n" +
+                "    l.street_address\n" +
+                "FROM departments d\n" +
+                "LEFT JOIN employees m ON d.manager_id = m.employee_id\n" +
+                "LEFT JOIN locations l ON d.location_id = l.location_id\n" +
+                "where d.department_id = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -146,7 +154,6 @@ public class DepartmentDao extends DaoBase {
         int managerId = rs.getInt("manager_id");
         if (managerId != 0) {
             Employee manager = new Employee();
-            manager.setEmployeeId(managerId);
             manager.setFirstName(rs.getString("first_name"));
             manager.setLastName(rs.getString("last_name"));
             department.setManager(manager);
@@ -155,9 +162,8 @@ public class DepartmentDao extends DaoBase {
         int locationId = rs.getInt(3);
         if (locationId != 0) {
             Location location = new Location();
-            location.setLocationId(locationId);
             location.setCity(rs.getString("city"));
-            location.setState_province(rs.getString("state"));
+            location.setState_province(rs.getString("street_address"));
             department.setLocation(location);
         }
 

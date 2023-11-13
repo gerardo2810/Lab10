@@ -44,7 +44,7 @@ public class DepartmentServlet extends HttpServlet {
                     try {
                         departmentid = Integer.parseInt(departmentIdString);
                     } catch (NumberFormatException ex) {
-                        response.sendRedirect("DepartmentServlet?action=lista");
+                        response.sendRedirect("DepartmentServlet");
                         return;
                     }
 
@@ -78,7 +78,7 @@ public class DepartmentServlet extends HttpServlet {
                     try {
                         departmentid = Integer.parseInt(departmentIdString);
                     } catch (NumberFormatException ex) {
-                        response.sendRedirect("DepartmentServlet?action=lista");
+                        response.sendRedirect("DepartmentServlet");
                         return;
                     }
 
@@ -89,7 +89,7 @@ public class DepartmentServlet extends HttpServlet {
                     }
                 }
 
-                response.sendRedirect("DepartmentServlet?action=lista");
+                response.sendRedirect("DepartmentServlet");
                 break;
         }
     }
@@ -111,7 +111,11 @@ public class DepartmentServlet extends HttpServlet {
             case "actualizar":
                 department.setDepartmentId(Integer.parseInt(request.getParameter("department_id")));
                 departmentDao.actualizarDepartment(department);
-                response.sendRedirect("DepartmentServlet?action=lista");
+                response.sendRedirect("DepartmentServlet");
+                break;
+            case "borrar":
+                departmentDao.borrarDepartment(Integer.parseInt(request.getParameter("id")));
+                response.sendRedirect(request.getContextPath()+"/DepartmentServlet");
                 break;
         }
     }

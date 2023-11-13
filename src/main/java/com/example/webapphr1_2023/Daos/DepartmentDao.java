@@ -104,25 +104,26 @@ public class DepartmentDao extends DaoBase {
             ex.printStackTrace();
         }
     }
-   public void actualizarDepartment(Department department) {
+    public void actualizarDepartment(Department department) {
+        String sql = "UPDATE departments "
+                + "SET department_name = ?, "
+                + "manager_id = ?, "
+                + "location_id = ? "
+                + "WHERE department_id = ?";
 
-       String sql = "UPDATE employees "
-               + "SET department_name = ?, "
-               + "manager_id = ?, "
-               + "location_id = ?, "
-               + "WHERE department_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-       try (Connection conn = getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            setDepartmentData(department, pstmt);
+            pstmt.setInt(4, department.getDepartmentId());
 
-           pstmt.setInt(11, department.getDepartmentId());
+            pstmt.executeUpdate();
 
-           pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-       } catch (SQLException ex) {
-           ex.printStackTrace();
-       }
-   }
 
 
     public void borrarDepartment(int department_id) {
@@ -142,41 +143,38 @@ public class DepartmentDao extends DaoBase {
         department.setDepartmentId(rs.getInt(1));
         department.setDepartmentName(rs.getString(2));
 
-        Employee manager = null;
-        if (rs.getInt("manager_id") != 0) {
-            manager = new Employee();
-            manager.setEmployeeId(rs.getInt("manager_id"));
+        int managerId = rs.getInt("manager_id");
+        if (managerId != 0) {
+            Employee manager = new Employee();
+            manager.setEmployeeId(managerId);
             manager.setFirstName(rs.getString("first_name"));
             manager.setLastName(rs.getString("last_name"));
             department.setManager(manager);
         }
 
-        Location location = new Location();
-        location.setLocationId(rs.getInt(3));
-        location.setCity(rs.getString("city"));
-        location.setState_province(rs.getString("state"));
-        //location.setCountry(rs.getString("country_id"));
-        department.setLocation(location);
+        int locationId = rs.getInt(3);
+        if (locationId != 0) {
+            Location location = new Location();
+            location.setLocationId(locationId);
+            location.setCity(rs.getString("city"));
+            location.setState_province(rs.getString("state"));
+            department.setLocation(location);
+        }
 
         return department;
     }
 
 
+
     private void setDepartmentData(Department department, PreparedStatement pstmt) throws SQLException {
         pstmt.setString(1, department.getDepartmentName());
 
-        // Validar que el ID del gerente sea un número entero mayor que 0
-        if (department.getManager() != null && department.getManager().getEmployeeId() <= 0) {
-            throw new SQLException("El ID del gerente debe ser un número entero mayor que 0");
-        }
+        Employee manager = department.getManager();
+        Location location = department.getLocation();
 
-        // Validar que el ID de la ubicación sea un número entero mayor que 0
-        if (department.getLocation() != null && department.getLocation().getLocationId() <= 0) {
-            throw new SQLException("El ID de la ubicación debe ser un número entero mayor que 0");
-        }
-
-        pstmt.setInt(2, department.getManager() != null ? department.getManager().getEmployeeId() : null);
-        pstmt.setInt(3, department.getLocation() != null ? department.getLocation().getLocationId() : null);
+        pstmt.setInt(2, manager != null ? manager.getEmployeeId() : 0);
+        pstmt.setInt(3, location != null ? location.getLocationId() : 0);
     }
+
 
 }

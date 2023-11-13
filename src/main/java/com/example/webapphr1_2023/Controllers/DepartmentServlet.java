@@ -60,10 +60,17 @@ public class DepartmentServlet extends HttpServlet {
                     } else {
                         response.sendRedirect("DepartmentServlet");
                     }
+
+                    // Agrega este bloque para enviar la respuesta al cliente
+                    response.setContentType("text/html");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write("Edición exitosa");  // Puedes personalizar este mensaje
+                    return;
                 } else {
                     response.sendRedirect("DepartmentServlet");
                 }
                 break;
+
             case "borrar":
                 if (request.getParameter("id") != null) {
                     String departmentIdString = request.getParameter("id");
